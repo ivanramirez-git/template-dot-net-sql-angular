@@ -1,0 +1,73 @@
+version: "3"
+services:
+
+  app:
+    image: pruebawtw-app
+    build:
+      context: ./App
+      dockerfile: Dockerfile
+    depends_on:
+      - api
+    networks:
+      - mynetwork
+    ports:
+      - "8080:80"
+    restart: always
+
+  api:
+    image: pruebawtw-api
+    build:
+      context: ./Api
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    networks:
+      - mynetwork
+    ports:
+      - "5207:5207"
+    restart: always
+
+  db:
+    image: mcr.microsoft.com/mssql/server
+    environment:
+      SA_PASSWORD: "abc123ABC"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - mynetwork
+    volumes:
+      - ./Db/data/mssql:/var/opt/mssql/
+      - ./Db/data/backups:/backups
+    restart: always
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          '/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P ${Sa_Password:-abc123ABC} -Q "select 1" || exit 1',
+        ]
+      interval: 10s
+      retries: 10
+      start_period: 10s
+      timeout: 3s
+
+  db.configurator:
+    image: mcr.microsoft.com/mssql/server
+    depends_on:
+      - db
+    networks:
+      - mynetwork
+    volumes:
+      - ./db/src:/docker-entrypoint-initdb.d
+    command: >
+      /bin/bash -c 'echo "Waiting for database to be ready..." && sleep 10 && echo "Configuring database..." && /opt/mssql-tools/bin/sqlcmd -S db -U sa -P abc123ABC -d master -i /docker-entrypoint-initdb.d/init.sql && /opt/mssql-tools/bin/sqlcmd -S db -U sa -P abc123ABC -d master -i /docker-entrypoint-initdb.d/config.sql && /opt/mssql-tools/bin/sqlcmd -S db -U sa -P abc123ABC -d master -i /docker-entrypoint-initdb.d/ddl.sql && /opt/mssql-tools/bin/sqlcmd -S db -U sa -P abc123ABC -d master -i /docker-entrypoint-initdb.d/dml.sql && echo "Database configured"'
+    restart: on-failure
+
+networks:
+  mynetwork:
+# Para crear aplicaciones por primera vez usar el comando: docker-compose up -d --build
+
+# Comando Rapido para REINICIAR en modo desarrollo:
+#  docker stop pruebawtw-db-1 && docker rm pruebawtw-db-1 && rm -rf db/data && docker-compose up -d --build
+
+# NOTA: Esperar 30 segundos para que la base de datos se configure correctamente y todo se inicialice

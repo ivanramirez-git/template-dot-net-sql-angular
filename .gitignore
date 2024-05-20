@@ -1,0 +1,16 @@
+# Carpeta Db
+Db/data/mssql
+
+# Binarios de ApiTest .NET
+ApiTest/bin
+ApiTest/obj
+ApiTest/out
+
+# Carpeta de binarios de Api
+Api/bin
+Api/obj
+Api/out
+
+# Carpeta de binarios de App
+App/node_modules
+App/dist

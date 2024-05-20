@@ -1,0 +1,49 @@
+<div class="busqueda">
+  <h2>Tipo de Búsqueda</h2>
+  <div class="tipo-busqueda">
+    <input type="radio" id="cliente-check" name="tipo-busqueda" (click)="tipoBusqueda = 'cliente'" checked>
+    <label for="cliente-check">Cliente</label>
+    <input type="radio" id="numero-factura-check" name="tipo-busqueda" (click)="tipoBusqueda = 'numero-factura'">
+    <label for="numero-factura-check">Número de Factura</label>
+  </div>
+
+  <div class="contenedor">
+    <div class="cliente" *ngIf="tipoBusqueda === 'cliente'">
+      <label for="cliente">Cliente</label>
+      <select id="cliente" name="cliente" [(ngModel)]="clienteSeleccionado">
+        <option value="" selected disabled>Selecciona un cliente</option>
+        <option *ngFor="let cliente of datosCliente" [value]="cliente.id">{{ cliente.razonSocial }}</option>
+      </select>
+    </div>
+
+
+    <div class="numero-factura" *ngIf="tipoBusqueda === 'numero-factura'">
+      <label for="numero-factura">Número de Factura</label>
+      <input type="number" id="numero-factura" name="numero-factura" class="numero-factura-input" />
+    </div>
+
+    <button class="buscar-button" *ngIf="!isLoadingBotonBusqueda" (click)="buscar()">
+      BUSCAR
+    </button>
+    <app-loader *ngIf="isLoadingBotonBusqueda" [tamanio]="20"></app-loader>
+
+
+    <table class="resultados-table" aria-describedby="resultados-descripcion">
+      <thead>
+        <tr>
+          <th>Número de Factura</th>
+          <th>Fecha de Emisión</th>
+          <th>Total Facturado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let factura of datosFactura">
+          <td>{{ factura.numeroDeFactura }}</td>
+          <td>{{ factura.fechaEmisionFactura | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ factura.totalFactura | currency: 'USD' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>

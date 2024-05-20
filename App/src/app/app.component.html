@@ -1,0 +1,24 @@
+<h1 class="text-center">
+  Proyecto de Testing
+</h1>
+
+<app-interruptor [labelLeft]="'Factura'"
+  [labelRight]="'Búsqueda'"
+  (estadoCambiado)="onEstadoCambiado($event)"
+  [estadoInicial]="estadoInterruptor"/>
+
+<div class="container">
+  <div *ngIf="!estadoInterruptor">
+    <app-facturas/>
+  </div>
+
+  <div *ngIf="estadoInterruptor">
+    <app-busqueda/>
+  </div>
+</div>
+
+
+<footer class="text-center">
+  <p>Hecho con ❤️ por <a href="https://github.com/ivanramirez-git">Iván Ramírez</a></p>
+</footer>
+

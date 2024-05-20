@@ -1,0 +1,10 @@
+<div class="interruptor-container">
+  <div class="interruptor-labels">
+    <div class="interruptor-label-left">{{ labelLeft }}</div>
+    <div class="interruptor-label-center">|</div>
+    <div class="interruptor-label-right">{{ labelRight }}</div>
+  </div>
+  <div class="interruptor" (click)="toggleInterruptor()">
+    <div class="interruptor-toggle" [class.active]="estadoInterruptor"></div>
+  </div>
+</div>

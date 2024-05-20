@@ -1,0 +1,28 @@
+.container {
+  /* Centrar */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader {
+  width: 40px;
+  height: 40px;
+  /* Círculo blanco */
+  border: 4px solid rgba(0, 0, 0, 0.25);
+  /* Opacidad del 50% */
+  /* Círculo negro (parte superior) */
+  border-top: 4px solid #000;
+  border-radius: 50%;
+  /* Animación de giro */
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

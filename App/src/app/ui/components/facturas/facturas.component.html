@@ -1,0 +1,84 @@
+<div class="factura">
+  <h2>Nueva Factura</h2>
+  <button class="nuevo-button" (click)="nuevoFactura()">NUEVO</button>
+
+  <div class="contenedor">
+    <div class="cliente"><label for="cliente">Cliente</label>
+      <select id="cliente" name="cliente" [(ngModel)]="datosFactura.idCliente" (change)="clienteSeleccionadoChange()">
+        <option value="" selected disabled>Selecciona un cliente</option>
+        <option *ngFor="let cliente of datosCliente" [value]="cliente.id">{{ cliente.razonSocial }}</option>
+      </select>
+    </div>
+
+    <div class="numero-factura">
+      <label for="numero-factura">Número de Factura</label>
+      <div class="numero-factura-input-container">
+        <input type="number" id="numero-factura" name="numero-factura" class="numero-factura-input"
+          [(ngModel)]="datosFactura.numeroDeFactura" (change)="numeroFacturaChange()">
+        <div class="divider" *ngIf="isLoadingNumeroFactura"></div>
+        <app-loader *ngIf="isLoadingNumeroFactura" [tamanio]="20"></app-loader>
+      </div>
+    </div>
+
+    <button class="agregar-producto-button" (click)="agregarProducto()">AGREGAR PRODUCTO</button>
+
+    <table class="productos-table" aria-describedby="productos-descripcion">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Precio Unitario</th>
+          <th>Cantidad</th>
+          <th>Imagen</th>
+          <th>Totales</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let detalle of datosFactura.detalleFactura">
+          <td>
+            <select [(ngModel)]="detalle.producto" (change)="productoSeleccionadoChange(detalle)">
+              <option [ngValue]="null">Selecciona un producto</option>
+              <option *ngFor="let producto of datosProductos" [ngValue]="producto">{{ producto.nombreProducto }}
+              </option>
+            </select>
+          </td>
+
+          <td>{{ detalle.precioUnitario }}</td>
+          <td>
+            <button (click)="cantidadProductoChange(detalle, true)">+</button>
+            {{ detalle.cantidadDeProducto }}
+            <button (click)="cantidadProductoChange(detalle, false)">-</button>
+
+          </td>
+          <td><img [src]="detalle.producto.imagenProducto" [alt]="detalle.producto.nombreProducto"></td>
+          <td>{{ detalle.subTotal }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+
+    <table class="totales-table" aria-describedby="totales-descripcion">
+      <thead>
+        <tr>
+          <th>Concepto</th>
+          <th>Monto</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Subtotal</td>
+          <td>{{ datosFactura.subTotalFactura }}</td>
+        </tr>
+        <tr>
+          <td>Impuestos (19%)</td>
+          <td>{{ datosFactura.totalImpuestos }}</td>
+        </tr>
+        <tr>
+          <td>Total</td>
+          <td>{{ datosFactura.totalFactura }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <button id="guardar-button-crear-factura" class="guardar-button" (click)="guardarFactura()">GUARDAR</button>
+  </div>
+</div>
